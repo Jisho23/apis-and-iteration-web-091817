@@ -9,11 +9,7 @@ def get_character_movies_from_api(character)
   while character_hash
     character_hash["results"].each do |current_character|
       if current_character["name"].downcase == character.downcase
-        current_character["films"].each do |api_link|
-          current_movie_hash = ruby_hasher(api_link)
-          hash_character_movies[current_movie_hash["episode_id"]] = current_movie_hash["title"]
-        end
-        return hash_character_movies
+        return hash_character_movies(current_character)
       end
     end
     if character_hash["next"] == nil
@@ -23,6 +19,15 @@ def get_character_movies_from_api(character)
     character_hash = ruby_hasher(character_hash["next"])
   end
 
+end
+
+def hash_character_movies(character)
+  newHash = {}
+  character["films"].each do |api_link|
+    current_movie_hash = ruby_hasher(api_link)
+    newHash[current_movie_hash["episode_id"]] = current_movie_hash["title"]
+  end
+  newHash
 end
 
 def ruby_hasher(api_link)
